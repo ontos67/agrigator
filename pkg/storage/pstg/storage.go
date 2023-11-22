@@ -4,6 +4,7 @@ package storage
 import (
 	"context"
 	"errors"
+	"os"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -41,8 +42,8 @@ type Article struct {
 }
 
 func New() (*DB, error) {
-	//connstr := os.Getenv("agrigatordb")
-	connstr := "postgres://postgres:" + "plazma" + "@localhost:5432/agrigatordb"
+	connstr := os.Getenv("agrigatordb")
+
 	if connstr == "" {
 		return nil, errors.New("не указано подключение к БД")
 	}
