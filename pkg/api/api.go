@@ -3,6 +3,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -20,6 +21,7 @@ func New(db *storage.DB) *API {
 	a := API{db: db, r: mux.NewRouter()}
 	a.endpoints()
 	return &a
+
 }
 
 func (api *API) Router() *mux.Router {
@@ -34,7 +36,7 @@ func (api *API) endpoints() {
 }
 
 // lastArticles обрабатывает запрос на последние n новостгй с деталями
-// в браузере http://localhost:9998/news/last?n=5
+// в браузере http://localhost:998/news/last?n=5
 // n
 func (api *API) lastArticles(w http.ResponseWriter, r *http.Request) {
 	form := r.URL.Query()
@@ -50,10 +52,11 @@ func (api *API) lastArticles(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(news)
+	log.Println("Agrigator: API:lastArticles:", "ok ", r.URL.Query().Encode())
 }
 
 // lastArticlesList обрабатывает запрос на последние n новостгй с деталями
-// в браузере http://localhost:9998/news/lastlist?n=5
+// в браузере http://localhost:998/news/lastlist?n=5
 // n
 func (api *API) lastArticlesList(w http.ResponseWriter, r *http.Request) {
 	form := r.URL.Query()
@@ -69,10 +72,11 @@ func (api *API) lastArticlesList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(news)
+	log.Println("Agrigator: API:lastArticlesList:", "ok ", r.URL.Query().Encode())
 }
 
 // newsFilteredDetailed обрабатывает запрос на поиск новости по полям title или
-// в браузере http://localhost:9998/news/filter?time1=1699016144&time2=1700293140&lim=100&field=title&contains=putin&sortfield=id&dir=s
+// в браузере http://localhost:998/news/filter?time1=1699016144&time2=1700293140&lim=100&field=title&contains=putin&sortfield=id&dir=s
 // time1, time2, Lim, field, content, sortfield, dir
 func (api *API) newsFilteredList(w http.ResponseWriter, r *http.Request) {
 	var fParam storage.FilterParam
@@ -96,10 +100,11 @@ func (api *API) newsFilteredList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(news)
+	log.Println("Agrigator: API:newsFilteredList:", "ok ", r.URL.Query().Encode())
 }
 
 // NewsFullDetailed обрабатывает запрос на конкретную новость с деталями
-// в браузере http://localhost:9998/news/news?id=5
+// в браузере http://localhost:998/news/news?id=5
 // id
 func (api *API) newsFullDetailed(w http.ResponseWriter, r *http.Request) {
 	form := r.URL.Query()
@@ -115,4 +120,5 @@ func (api *API) newsFullDetailed(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(news)
+	log.Println("Agrigator: API:newsFullDetailed:", "ok ", r.URL.Query().Encode())
 }

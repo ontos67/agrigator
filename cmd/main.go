@@ -3,7 +3,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -20,6 +19,13 @@ type config struct {
 }
 
 func main() {
+	f, err := os.OpenFile("testlogfile", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer f.Close()
+	log.SetOutput(f)
+	log.Println("Запуск службы...")
 	db, err := storage.New()
 	if err != nil {
 		log.Fatal(err)
@@ -52,8 +58,8 @@ func main() {
 			log.Println("ошибка:", err)
 		}
 	}()
-
-	err = http.ListenAndServe(":9998", api.Router())
+	log.Println("Запуск сервера. Порт: 998...")
+	err = http.ListenAndServe(":998", api.Router())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -70,6 +76,5 @@ func parseURL(url string, db *storage.DB, posts chan<- []storage.Article, errs c
 		}
 		posts <- news
 		time.Sleep(time.Minute * time.Duration(period))
-		fmt.Println("прошла минута")
 	}
 }
