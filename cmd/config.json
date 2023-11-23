@@ -4,5 +4,7 @@
       "https://tass.com/rss/v2.xml",
       "https://rssexport.rbc.ru/rbcnews/news/30/full.rss"
    ],
-   "cicle": 1
+   "cicle": 1,
+   "port":":998",
+   "dbadr":"@localhost:5432/comments"
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	_, err := New()
+	_, err := New("@localhost:5432/agrigator")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -22,7 +22,7 @@ func TestDB_Articles(t *testing.T) {
 			Url:   strconv.Itoa(rand.Intn(1_000_000_000)),
 		},
 	}
-	db, err := New()
+	db, err := New("@localhost:5432/agrigator")
 	if err != nil {
 		t.Fatal(err)
 	}

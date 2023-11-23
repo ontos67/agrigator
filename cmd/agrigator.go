@@ -16,6 +16,8 @@ import (
 type config struct {
 	URLS   []string `json:"rss"`
 	Period int      `json:"cicle"`
+	Port   string   `json:"port"`
+	DBadr  string   `json:"dbadr"`
 }
 
 func main() {
@@ -24,13 +26,6 @@ func main() {
 		log.Fatalf("error opening file: %v", err)
 	}
 	defer f.Close()
-	log.SetOutput(f)
-	log.Println("Запуск службы...")
-	db, err := storage.New()
-	if err != nil {
-		log.Fatal(err)
-	}
-	api := api.New(db)
 	b, err := os.ReadFile("./cmd/config.json")
 	if err != nil {
 		log.Fatal(err)
@@ -40,6 +35,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.SetOutput(f)
+	log.Println("Запуск службы...")
+	db, err := storage.New(config.DBadr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	api := api.New(db)
 
 	chPosts := make(chan []storage.Article)
 	chErrs := make(chan error)
@@ -58,8 +60,8 @@ func main() {
 			log.Println("ошибка:", err)
 		}
 	}()
-	log.Println("Запуск сервера. Порт: 998...")
-	err = http.ListenAndServe(":998", api.Router())
+	log.Println("Запуск сервера. Порт", config.Port)
+	err = http.ListenAndServe(config.Port, api.Router())
 	if err != nil {
 		log.Fatal(err)
 	}
